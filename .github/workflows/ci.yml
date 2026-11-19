@@ -26,6 +26,8 @@ jobs:
         with:
           packages: "platforms;android-37.2 build-tools;36.1.0"
       - uses: gradle/actions/setup-gradle@v5
+      - name: Translations in step (coverage, placeholders, plural forms)
+        run: python3 .github/check-translations.py
       - name: Unit tests, lint and debug builds
         run: ./gradlew --stacktrace :core:test :tools:installDist :app:lintFossDebug :app:lintPlayDebug :app:assembleFossDebug :app:assemblePlayDebug
       - name: Lint reports
