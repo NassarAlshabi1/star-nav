@@ -40,7 +40,7 @@ Five pages in the bottom bar: Position, Mock GPS, Starlink, Sessions and Setting
   password is never stored or logged. A probe shows what your dish and plan answer.
 - **Maps.** Every position source on one map; street (OpenFreeMap) or Sentinel-2 satellite background, off by
   default because the tile server sees the area on screen.
-- Light and dark theme, English and Ukrainian.
+- Light and dark theme, English, Ukrainian and Arabic.
 
 Planned: fusion with the phone's own GNSS when it can be trusted.
 

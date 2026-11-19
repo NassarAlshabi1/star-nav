@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -33,9 +38,48 @@ import java.util.Locale
 /** Both looks come from Theme.kt: a full Material scheme plus the app's own [StarColors]. */
 @Composable
 fun AppTheme(dark: Boolean, content: @Composable () -> Unit) {
+    // Cairo (res/font) shapes the Arabic translation with joined letters and even colour; every other language keeps
+    // the platform font. Values drawn in monospace (telemetry, log lines) keep their own font family.
+    val arabic = LocalConfiguration.current.locales.get(0).language == "ar"
     CompositionLocalProvider(LocalStarColors provides if (dark) DarkStarColors else LightStarColors) {
-        MaterialTheme(colorScheme = if (dark) DarkScheme else LightScheme, content = content)
+        MaterialTheme(
+            colorScheme = if (dark) DarkScheme else LightScheme,
+            typography = if (arabic) CairoTypography else Typography(),
+            content = content,
+        )
     }
+}
+
+/*
+ * Cairo's four static weights, instanced from the variable font (see THIRD_PARTY.md for the licence). The
+ * styles keep Material's sizes and spacing; only the letters change, so the dense layouts stay as they are.
+ */
+private val Cairo = FontFamily(
+    Font(R.font.cairo_regular, FontWeight.Normal),
+    Font(R.font.cairo_medium, FontWeight.Medium),
+    Font(R.font.cairo_semibold, FontWeight.SemiBold),
+    Font(R.font.cairo_bold, FontWeight.Bold),
+)
+
+private val CairoTypography: Typography = Typography().let { d ->
+    fun s(t: TextStyle) = t.copy(fontFamily = Cairo)
+    Typography(
+        displayLarge = s(d.displayLarge),
+        displayMedium = s(d.displayMedium),
+        displaySmall = s(d.displaySmall),
+        headlineLarge = s(d.headlineLarge),
+        headlineMedium = s(d.headlineMedium),
+        headlineSmall = s(d.headlineSmall),
+        titleLarge = s(d.titleLarge),
+        titleMedium = s(d.titleMedium),
+        titleSmall = s(d.titleSmall),
+        bodyLarge = s(d.bodyLarge),
+        bodyMedium = s(d.bodyMedium),
+        bodySmall = s(d.bodySmall),
+        labelLarge = s(d.labelLarge),
+        labelMedium = s(d.labelMedium),
+        labelSmall = s(d.labelSmall),
+    )
 }
 
 /**

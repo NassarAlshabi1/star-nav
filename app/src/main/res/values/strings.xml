@@ -256,6 +256,12 @@
     <string name="config_theme_light">Light</string>
     <string name="config_theme_dark">Dark</string>
     <string name="config_theme_system_light_hint">Android 8 and 9 have no dark theme of their own, so System means Light on this phone.</string>
+    <!-- App language: empty tag follows the system (and Android 13's per-app language); the languages below list themselves in their own words. -->
+    <string name="config_language_title">Language</string>
+    <string name="config_language_system">System</string>
+    <string name="config_language_en" translatable="false">English</string>
+    <string name="config_language_ar" translatable="false">العربية</string>
+    <string name="config_language_uk" translatable="false">Українська</string>
     <string name="config_dish_title">Dish</string>
     <string name="config_dish_address">Dish address (host or host:port)</string>
     <string name="config_transport">Transport</string>

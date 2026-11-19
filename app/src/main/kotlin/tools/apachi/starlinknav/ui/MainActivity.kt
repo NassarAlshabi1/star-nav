@@ -1,6 +1,7 @@
 package tools.apachi.starlinknav.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
@@ -52,6 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import tools.apachi.starlinknav.App
+import tools.apachi.starlinknav.AppLocale
 import tools.apachi.starlinknav.R
 import tools.apachi.starlinknav.account.AccountOverlay
 import tools.apachi.starlinknav.setup.CheckState
@@ -75,6 +77,11 @@ class MainActivity : ComponentActivity() {
      * is recreated later (theme, rotation, font scale) does not jump to that page again.
      */
     private val openRequest = MutableStateFlow<Dest?>(null)
+
+    // The app's own language (Settings) overrides the locale of every screen; "" keeps the system's.
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(AppLocale.wrap(base))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

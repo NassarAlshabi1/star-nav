@@ -6,6 +6,19 @@ All notable changes to this project are listed here. The format follows
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-19
+
+### Added
+- Arabic translation: every screen, notification and the Quick Settings tile, with the Cairo font (bundled, SIL OFL 1.1)
+  and a full right-to-left layout.
+- Settings now has a Language choice (System, English, العربية, Українська) that works on every Android version the app
+  supports; on Android 13 and newer the system's per-app language setting works too.
+- The release notes and the store listing (F-Droid metadata) come in Arabic as well.
+
+### Changed
+- The Wi-Fi name and password rules now say what each translation's letters cost in bytes (Arabic for Arabic, Cyrillic
+  for Ukrainian), instead of naming Cyrillic only.
+
 ## [0.6.0] - 2026-10-27
 
 ### Added

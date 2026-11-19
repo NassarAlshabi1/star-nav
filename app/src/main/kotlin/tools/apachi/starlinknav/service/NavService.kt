@@ -33,6 +33,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import tools.apachi.starlinknav.App
+import tools.apachi.starlinknav.AppLocale
 import tools.apachi.starlinknav.BuildConfig
 import tools.apachi.starlinknav.MockMode
 import tools.apachi.starlinknav.MountMode
@@ -85,6 +86,11 @@ import java.util.concurrent.Executors
  * passed straight to apps).
  */
 class NavService : Service() {
+    // The app's own language (Settings) overrides the locale of the notifications; "" keeps the system's.
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(AppLocale.wrap(base))
+    }
+
     private val scope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, e ->
             // Keep what still works running; make the failure visible in the log and on screen.

@@ -91,6 +91,12 @@ data class SettingsSnapshot(
     val inertialCorrection: Boolean = true,
     /** Light, dark or the system's; a look only, so it is not in [toJson] (session headers). */
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    /**
+     * The app's own language: "" follows the system (and Android 13's per-app language), anything else is a
+     * BCP-47 tag ("ar", "en", "uk") that overrides the locale of every screen and notification. Like the theme,
+     * a look-and-words choice only, so it is not in [toJson] (session headers).
+     */
+    val languageTag: String = "",
 ) {
     val mountLearned: Double? get() = mountLearnedDeg.toDouble().takeIf { it.isFinite() }
 
@@ -158,6 +164,7 @@ class Settings(context: Context) {
             .putBoolean("networkFallback", s.networkFallback)
             .putBoolean("inertialCorrection", s.inertialCorrection)
             .putString("themeMode", s.themeMode.name)
+            .putString("languageTag", s.languageTag)
             .apply()
         state.value = s
     }
@@ -186,6 +193,7 @@ class Settings(context: Context) {
             networkFallback = prefs.getBoolean("networkFallback", d.networkFallback),
             inertialCorrection = prefs.getBoolean("inertialCorrection", d.inertialCorrection),
             themeMode = prefs.getString("themeMode", null)?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: d.themeMode,
+            languageTag = prefs.getString("languageTag", null) ?: d.languageTag,
         )
     }
 }

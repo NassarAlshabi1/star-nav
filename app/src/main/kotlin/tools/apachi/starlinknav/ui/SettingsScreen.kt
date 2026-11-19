@@ -25,7 +25,7 @@ import tools.apachi.starlinknav.R
 import tools.apachi.starlinknav.ThemeMode
 import tools.apachi.starlinknav.service.SessionStore
 
-/** App settings: look, logging (the master switch for session logs), motion sensors, and About. */
+/** App settings: look, language, logging (the master switch for session logs), motion sensors, and About. */
 @Composable
 fun SettingsScreen() {
     val settings = App.instance.settings
@@ -35,6 +35,15 @@ fun SettingsScreen() {
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(Space.m),
         verticalArrangement = Arrangement.spacedBy(Space.m),
     ) {
+        Section(stringResource(R.string.config_language_title)) {
+            // "" = the system's language (and Android 13's per-app choice); the rest name themselves in their own words.
+            val tags = listOf("", "en", "ar", "uk")
+            SegmentedRow(tags, s.languageTag, { tag ->
+                settings.update { it.copy(languageTag = tag) }
+                // A new locale rides on a new context: recreate the activity (the service and tile follow on their next start).
+                (ctx as? android.app.Activity)?.recreate()
+            }) { stringResource(languageLabel(it)) }
+        }
         Section(stringResource(R.string.config_theme_title)) {
             SegmentedRow(ThemeMode.entries, s.themeMode, { m ->
                 settings.update { it.copy(themeMode = m) }
@@ -97,6 +106,13 @@ private fun themeLabel(m: ThemeMode) = when (m) {
     ThemeMode.SYSTEM -> R.string.config_theme_system
     ThemeMode.LIGHT -> R.string.config_theme_light
     ThemeMode.DARK -> R.string.config_theme_dark
+}
+
+private fun languageLabel(tag: String) = when (tag) {
+    "ar" -> R.string.config_language_ar
+    "uk" -> R.string.config_language_uk
+    "en" -> R.string.config_language_en
+    else -> R.string.config_language_system
 }
 
 private fun openLink(ctx: android.content.Context, url: String) {

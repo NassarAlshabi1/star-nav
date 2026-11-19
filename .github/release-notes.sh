@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Prints the GitHub release text for one version, in English and Ukrainian: which file to download, the version's
-# section of CHANGELOG.md and of CHANGELOG.uk.md, the signing certificate and the checksums link. Used by release.yml.
+# Prints the GitHub release text for one version, in English, Ukrainian and Arabic: which file to download, the
+# version's section of CHANGELOG.md, of CHANGELOG.uk.md and of CHANGELOG.ar.md, the signing certificate and the
+# checksums link. Used by release.yml.
 # Usage: .github/release-notes.sh VERSION CERT_SHA256
 set -euo pipefail
 v="$1"
@@ -27,6 +28,7 @@ section() {
 }
 en="$(section CHANGELOG.md)"
 uk="$(section CHANGELOG.uk.md)"
+ar="$(section CHANGELOG.ar.md)"
 
 # A table row: what the phone is, then the play and foss APK for its ABI as download links.
 dl="$repo/releases/download/v$v"
@@ -91,4 +93,33 @@ $cert
 $uk
 
 Усі версії: [CHANGELOG.uk.md]($repo/blob/v$v/CHANGELOG.uk.md) (до 0.5.5 — англійською в [CHANGELOG.md]($repo/blob/v$v/CHANGELOG.md)).
+
+## العربية
+
+Star Nav $v لأندرويد 8.0 وأحدث. ما يفعله التطبيق وكيف تُعدّه: [الـREADME بالإنجليزية]($repo/blob/v$v/README.md#readme).
+
+### أي ملف تنزّل
+
+| الهاتف | مع خدمات Google Play | بدون Google |
+|---|---|---|
+$(row "معظم الهواتف (64-بت)" arm64-v8a)
+$(row "الهواتف الأقدم 32-بت" armeabi-v7a)
+$(row "أي هاتف، إن لم تكن متأكداً (تنزيل أكبر)" universal)
+$(row "المحاكيات وأجهزة x86" x86_64)
+
+بنية خدمات Google Play تضع أيضاً موقعها المدمج في الوضع الوهمي؛ أما البنية بلا Google فلا تحوي أي مكتبة من Google. كل الملفات موقّعة بمفتاح واحد. البنية من مصدر آخر (Google Play أو F-Droid أو بنيتك الخاصة) لها مفتاح آخر: للانتقال، صدّر الجلسات التي تريد إبقاءها، ثم أزل التطبيق وثبّت هذه.
+
+بصمة شهادة التوقيع SHA-256:
+
+\`\`\`text
+$cert
+\`\`\`
+
+مجاميع التحقق لكل الملفات: [SHA256SUMS]($dl/SHA256SUMS).
+
+### الجديد في $v
+
+$ar
+
+كل الإصدارات: [CHANGELOG.ar.md]($repo/blob/v$v/CHANGELOG.ar.md).
 EOF

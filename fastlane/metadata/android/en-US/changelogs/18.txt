@@ -1,0 +1,1 @@
+Arabic translation of every screen and notification, with the Cairo font and full right-to-left layout. New in Settings: choose the app language (System, English, العربية, Українська) on any Android version.

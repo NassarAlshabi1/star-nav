@@ -3,12 +3,14 @@ package tools.apachi.starlinknav.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.core.content.ContextCompat
+import tools.apachi.starlinknav.AppLocale
 import tools.apachi.starlinknav.R
 import tools.apachi.starlinknav.service.Live
 import tools.apachi.starlinknav.service.NavService
@@ -19,6 +21,11 @@ import tools.apachi.starlinknav.service.NavService
  * service from the foreground (Android may refuse to start one from a tile).
  */
 class MockTileService : TileService() {
+    // The app's own language (Settings) also names the tile and its subtitle; "" keeps the system's.
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(AppLocale.wrap(base))
+    }
+
     override fun onStartListening() = refresh()
 
     override fun onClick() {

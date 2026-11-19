@@ -241,6 +241,9 @@
     <string name="config_theme_light">Світла</string>
     <string name="config_theme_dark">Темна</string>
     <string name="config_theme_system_light_hint">В Android 8 і 9 немає власної темної теми системи, тому «Системна» на цьому смартфоні означає світлу.</string>
+    <!-- App language -->
+    <string name="config_language_title">Мова</string>
+    <string name="config_language_system">Системна</string>
     <string name="config_dish_title">Антена</string>
     <string name="config_dish_address">Адреса антени (host або host:port)</string>
     <string name="config_transport">Транспорт</string>
