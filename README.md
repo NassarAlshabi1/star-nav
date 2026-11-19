@@ -2,7 +2,7 @@
 
 **A GPS your phone can trust when satellite navigation is jammed or spoofed.**
 
-[Українською](README.uk.md)
+[Українською](README.uk.md) | [العربية](README.ar.md)
 
 When GNSS is jammed or spoofed, the phone's GPS freezes, drifts or jumps to another continent, and every
 navigation app follows it. A Starlink dish on the car roof still knows where it is. Star Nav reads the dish's
