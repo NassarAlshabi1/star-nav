@@ -30,10 +30,19 @@ jobs:
         run: python3 .github/check-translations.py
       - name: Unit tests, lint and debug builds
         run: ./gradlew --stacktrace :core:test :tools:installDist :app:lintFossDebug :app:lintPlayDebug :app:assembleFossDebug :app:assemblePlayDebug
+      - name: Screenshot tests (English, Arabic, Ukrainian)
+        run: ./gradlew --stacktrace :app:testFossDebugUnitTest --tests "tools.apachi.starlinknav.ui.TranslationScreenshotsTest" --tests "tools.apachi.starlinknav.ui.ArabicAppScreenshotsTest"
       - name: Lint reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: lint-reports
           path: app/build/reports/lint-results-*.html
+          if-no-files-found: ignore
+      - name: Screenshot reports (actual and expected images)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshot-reports
+          path: app/src/test/screenshots/
           if-no-files-found: ignore

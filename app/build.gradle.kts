@@ -82,6 +82,23 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        // Screenshot tests (Roborazzi) need the real resources on the Robolectric classpath:
+        // strings, the Cairo font, drawables, the manifest.
+        unitTests {
+            isIncludeAndroidResources = true
+            all { test ->
+                // Without the Roborazzi Gradle plugin the capture calls are silent no-ops, so
+                // pick the mode here: normally verify (fail when a screen no longer matches its
+                // recorded image), with -ProborazziRecord record (write the images to commit).
+                test.systemProperty(
+                    if (providers.gradleProperty("roborazziRecord").isPresent) "roborazzi.test.record" else "roborazzi.test.verify",
+                    "true",
+                )
+            }
+        }
+    }
+
     androidResources {
         // Lists the app under Settings > System > Languages > App languages (Android 13+),
         // with the languages that have a values-xx folder.
@@ -121,4 +138,12 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.maplibre.android)
     "playImplementation"(libs.play.services.location)
+    // Screenshot tests run on Robolectric, which is a JUnit 4 runner; core's JUnit 5 stays in core.
+    testImplementation(libs.junit4)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.coroutines.android)
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Debug builds only: the JVM screenshot tests (Roborazzi) host their composables in a
+         plain ComponentActivity. The unit-test resource package AGP hands Robolectric carries
+         the main manifest, so the activity has to be declared here to be resolvable; release
+         builds never include it, and without an intent filter it adds no launcher icon. -->
+    <application>
+        <activity android:name="androidx.activity.ComponentActivity" android:exported="true" />
+    </application>
+</manifest>

@@ -6,6 +6,13 @@ All notable changes to this project are listed here. The format follows
 
 ## [Unreleased]
 
+### Added
+- Screenshot tests of the Mock GPS and Settings pages in English, Arabic and Ukrainian (Roborazzi on the JVM):
+  CI now catches a layout broken by Cairo's wider Arabic letters, or a screen that slips back to untranslated text.
+- CI checks that every translation stays in step with the English strings: same keys, same format placeholders,
+  all Arabic plural forms.
+- README in Arabic.
+
 ## [0.6.1] - 2026-11-19
 
 ### Added
