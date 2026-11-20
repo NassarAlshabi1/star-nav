@@ -868,6 +868,7 @@ class NavService : Service() {
     }
 
     /** The fallback chain's state changed (poller coroutine): into the session log and the status lines. */
+    @Suppress("UnusedParameter") // atNs arrives with the DishLocationChain callback contract; nothing logs it yet.
     private fun onLocationRefusal(refusal: LocationRefusal?, call: DishCallResult, atNs: Long) {
         event("dish_location", if (refusal == null) "answers" else "refused=${refusal.name} message=${(call.grpcMessage ?: call.error).orEmpty().take(120)}")
         updateNotificationAsync()

@@ -296,6 +296,8 @@ internal class Ekf(private val c: InertialConfig) {
         doubleArrayOf(s[3] / det, -s[1] / det, -s[2] / det, s[0] / det)
     }
 
+    // One continue per part kind that reshapes the state instead of measuring it; that is the filter speaking, not a smell.
+    @Suppress("LoopWithTooManyJumpStatements")
     fun apply(x0: DoubleArray, p0: DoubleArray, m: Meas): Pair<DoubleArray, DoubleArray> {
         if (!m.decided) {
             decide(m, x0, p0)

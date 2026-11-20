@@ -128,7 +128,10 @@ fun SetupChecklist() {
                         }
                         if (check.state != CheckState.OK) ActionRow {
                             // One button is just the step; two are numbered in the order to do them.
-                            PrimaryButton(if (hidden) stepLabel(1, R.string.setup_action_about_phone) else stringResource(R.string.setup_action_about_phone), onClick = { open(ctx, Intent(Settings.ACTION_DEVICE_INFO_SETTINGS)) })
+                            PrimaryButton(
+                                if (hidden) stepLabel(1, R.string.setup_action_about_phone) else stringResource(R.string.setup_action_about_phone),
+                                onClick = { open(ctx, Intent(Settings.ACTION_DEVICE_INFO_SETTINGS)) },
+                            )
                             if (hidden) SecondaryButton(stepLabel(2, R.string.setup_action_developer_options), onClick = { open(ctx, SetupChecks.mockLocationAppSettings()) })
                         }
                     }
@@ -163,20 +166,29 @@ fun SetupChecklist() {
                         Hint(stringResource(R.string.setup_notifications_why))
                         if (check.detail == Detail.AlertsChannelOff) Hint(stringResource(R.string.setup_notifications_channel_off))
                         if (check.state != CheckState.OK) ActionRow {
-                            PrimaryButton(stringResource(if (check.detail == Detail.AlertsChannelOff || askedPermission || !SetupChecks.notificationPermissionNeeded) R.string.setup_action_notification_settings else R.string.setup_action_allow), onClick = {
-                                if (check.detail == Detail.AlertsChannelOff) {
-                                    open(
-                                        ctx,
-                                        Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
-                                            .putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName)
-                                            .putExtra(Settings.EXTRA_CHANNEL_ID, App.CHANNEL_ALERTS),
-                                    )
-                                } else if (SetupChecks.notificationPermissionNeeded && !askedPermission) {
-                                    permissions.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-                                } else {
-                                    open(ctx, Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName))
-                                }
-                            })
+                            PrimaryButton(
+                                stringResource(
+                                    if (check.detail == Detail.AlertsChannelOff || askedPermission || !SetupChecks.notificationPermissionNeeded) {
+                                        R.string.setup_action_notification_settings
+                                    } else {
+                                        R.string.setup_action_allow
+                                    },
+                                ),
+                                onClick = {
+                                    if (check.detail == Detail.AlertsChannelOff) {
+                                        open(
+                                            ctx,
+                                            Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                                                .putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName)
+                                                .putExtra(Settings.EXTRA_CHANNEL_ID, App.CHANNEL_ALERTS),
+                                        )
+                                    } else if (SetupChecks.notificationPermissionNeeded && !askedPermission) {
+                                        permissions.launch(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                                    } else {
+                                        open(ctx, Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName))
+                                    }
+                                },
+                            )
                         }
                     }
                     SetupItem.BATTERY -> {

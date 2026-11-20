@@ -275,7 +275,9 @@ private fun describe(rec: Record, coords: Boolean): String {
     val body = when {
         rec.dish != null -> DishCallResult.fromRecord(rec.dish!!)?.let { c ->
             val f = c.response?.fix()
-            "${c.kind.label} ${c.statusText} ${c.rttNs / 1_000_000}ms" + (f?.let { " ${it.sourceName} σ=${it.sigmaM}" + if (coords) " ${it.lat},${it.lon}" else "" } ?: "") + boot(c) + newFields(c, coords, rec.t_wall_ms.takeIf { it > 0 })
+            "${c.kind.label} ${c.statusText} ${c.rttNs / 1_000_000}ms" +
+                (f?.let { " ${it.sourceName} σ=${it.sigmaM}" + if (coords) " ${it.lat},${it.lon}" else "" } ?: "") +
+                boot(c) + newFields(c, coords, rec.t_wall_ms.takeIf { it > 0 })
         } ?: "unknown kind ${rec.dish!!.kind}"
         rec.phone_location != null -> rec.phone_location!!.let { p ->
             "${p.provider} acc=${p.h_acc} spd=${p.speed} brg=${p.bearing} mock=${p.is_mock}" + if (coords) " ${p.lat},${p.lon}" else ""
@@ -380,14 +382,24 @@ private fun fakeDish(o: Opts) {
     val server = FakeDishServer(sim, bind, o.value("--port")?.toInt() ?: DishClient.WEB_PORT)
     println("fake dish serving gRPC-Web on $bind:${server.port} (Ctrl-C to stop)")
     println("  dish_set_config ${if (deny) "refused (PERMISSION_DENIED)" else "accepted"}; unimplemented: ${unimplemented.sorted().ifEmpty { listOf("-") }.joinToString()}")
-    println("  location on the local network (location_request_mode): ${if (o.flag("--location-off")) "OFF, GetLocation refused until dish_set_config switches it to LOCAL" + (if (deny) " (refused: needs --allow-set-config)" else "") else "LOCAL"}")
+    val locationMode = if (o.flag("--location-off")) {
+        "OFF, GetLocation refused until dish_set_config switches it to LOCAL" + (if (deny) " (refused: needs --allow-set-config)" else "")
+    } else {
+        "LOCAL"
+    }
+    println("  location on the local network (location_request_mode): $locationMode")
     val refusal = when {
         o.flag("--location-policy-denied") -> "refused by policy (PERMISSION_DENIED \"disabled due to policy\")"
         "get_location" in unimplemented -> "UNIMPLEMENTED"
         o.flag("--location-off") -> "refused: not enabled"
         else -> "answers"
     }
-    println("  GetLocation: $refusal; diagnostics location: ${if (o.flag("--no-diagnostics-location")) "withheld" else if (o.flag("--location-off")) "withheld while the setting is off" else "answers (the app's fallback while GetLocation is refused)"}")
+    val diagnosticsLocation = when {
+        o.flag("--no-diagnostics-location") -> "withheld"
+        o.flag("--location-off") -> "withheld while the setting is off"
+        else -> "answers (the app's fallback while GetLocation is refused)"
+    }
+    println("  GetLocation: $refusal; diagnostics location: $diagnosticsLocation")
     println("  dish heading = track %+.1f°".format(Locale.ROOT, sim.mountOffsetDeg) + (o.value("--fault-sideways")?.let { m ->
         "; AUTO and diagnostics $m m sideways from ${o.value("--fault-at") ?: "0"} s (ramp ${o.value("--fault-ramp") ?: "0"} s, for ${o.value("--fault-for") ?: "ever"} s)"
     } ?: ""))

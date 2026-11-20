@@ -81,15 +81,14 @@ object DebugDataBuilder {
         capturedAt = Instant.ofEpochMilli(nowWallMs).toString(),
         app = DebugApp(options.appVersion),
         identifiersRemoved = options.removeIdentifiers,
-        dish = dish.takeIf { it.isNotEmpty() }?.let { device(it, DISH_RAW, options, nowWallMs, ::dishSummary) },
-        router = router.takeIf { it.isNotEmpty() }?.let { device(it, ROUTER_RAW, options, nowWallMs, ::routerSummary) },
+        dish = dish.takeIf { it.isNotEmpty() }?.let { device(it, DISH_RAW, options, ::dishSummary) },
+        router = router.takeIf { it.isNotEmpty() }?.let { device(it, ROUTER_RAW, options, ::routerSummary) },
     )
 
     private fun device(
         results: List<DishCallResult>,
         rawKinds: List<DishCallKind>,
         options: Options,
-        nowWallMs: Long,
         summarize: (List<DishCallResult>, Options) -> Map<String, String>,
     ): DebugDevice {
         val raw = LinkedHashMap<String, String>()

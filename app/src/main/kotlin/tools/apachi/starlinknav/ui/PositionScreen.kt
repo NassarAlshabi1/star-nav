@@ -160,7 +160,7 @@ fun PositionScreen(onOpenMock: () -> Unit) {
     val list: @Composable (Modifier, Boolean) -> Unit = { modifier, withActions ->
         // The screen padding is the page gutter; the cards are one gap apart.
         LazyColumn(modifier, verticalArrangement = Arrangement.spacedBy(Space.m)) {
-            if (withActions) item { PositionActions(chosen, trust, mock.enabled, hasLocation, onCenter) }
+            if (withActions) item { PositionActions(chosen, trust, onCenter) }
             if (missing > 0) {
                 item {
                     Section(pluralStringResource(R.plurals.home_setup_missing, missing, missing)) {
@@ -209,7 +209,7 @@ fun PositionScreen(onOpenMock: () -> Unit) {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(Space.m)) {
                 Column(verticalArrangement = Arrangement.spacedBy(Space.s)) {
                     map(Modifier.fillMaxWidth().height(mapHeight))
-                    PositionActions(chosen, trust, mock.enabled, hasLocation, onCenter)
+                    PositionActions(chosen, trust, onCenter)
                 }
                 list(Modifier.weight(1f), false)
             }
@@ -253,7 +253,7 @@ private fun positionMarks(
  * disabled until there is a position. The maps button hands the position to the maps app on this tap only.
  */
 @Composable
-private fun PositionActions(chosen: ChosenPosition?, trust: TrustUi, mockOn: Boolean, hasLocation: Boolean, onCenter: () -> Unit) {
+private fun PositionActions(chosen: ChosenPosition?, trust: TrustUi, onCenter: () -> Unit) {
     val ctx = LocalContext.current
     val label = stringResource(if (chosen?.source == ChosenSource.GPS) R.string.pos_label_gps else R.string.pos_label_starlink)
     val noMaps = stringResource(R.string.pos_maps_none)

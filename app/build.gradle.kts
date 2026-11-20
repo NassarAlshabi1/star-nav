@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.detekt)
 }
 
 // Release signing: keystore.properties in the repository root (never committed) or STARNAV_*
@@ -124,6 +125,11 @@ android {
     }
 }
 
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+}
+
 dependencies {
     implementation(project(":core"))
     implementation(libs.androidx.core.ktx)
@@ -137,6 +143,9 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.maplibre.android)
+    // Installs app/src/main/baseline-prof.txt on first run: GitHub, F-Droid and APK installs get
+    // no cloud profile, so without this the pre-compiled classes never reach ART.
+    implementation(libs.androidx.profileinstaller)
     "playImplementation"(libs.play.services.location)
     // Screenshot tests run on Robolectric, which is a JUnit 4 runner; core's JUnit 5 stays in core.
     testImplementation(libs.junit4)

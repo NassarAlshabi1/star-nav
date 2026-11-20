@@ -314,7 +314,18 @@ private fun UpdateWindowCard(config: DishConfig?) {
         kinds = listOf(DishCallKind.DISH_SET_CONFIG),
         tag = TAG_UPDATE_WINDOW,
     ) { allowed ->
-        KeyValueRow(stringResource(R.string.controls_now), if (config == null) "-" else stringResource(R.string.controls_update_now, currentHour.toString(), stringResource(if (currentDeferral == true) R.string.common_yes else R.string.common_no)))
+        KeyValueRow(
+            stringResource(R.string.controls_now),
+            if (config == null) {
+                "-"
+            } else {
+                stringResource(
+                    R.string.controls_update_now,
+                    currentHour.toString(),
+                    stringResource(if (currentDeferral == true) R.string.common_yes else R.string.common_no),
+                )
+            },
+        )
         // Without the dish's current setting it is not shown and nothing is sent.
         val known = allowed && config != null
         NumberField(hour, { hour = it }, stringResource(R.string.controls_update_hour, currentHour?.toString() ?: "-"), known, Modifier.fillMaxWidth())
@@ -387,7 +398,11 @@ private fun LocalLocationCard(config: DishConfig?) {
         KeyValueRow(stringResource(R.string.controls_now), value, valueColor = color)
         if (reading != null && !reading.isPlain) Hint(localLocationSentence(reading))
         // Switching it off needs a setting read from the dish; asking to switch it on does not (the dish may refuse; its answer is shown).
-        PrimaryButton(stringResource(if (allowedNow) R.string.controls_location_block_button else R.string.controls_location_allow_button), { confirm = true }, enabled = enabled && !sender.busy && (!allowedNow || config != null))
+        PrimaryButton(
+            stringResource(if (allowedNow) R.string.controls_location_block_button else R.string.controls_location_allow_button),
+            { confirm = true },
+            enabled = enabled && !sender.busy && (!allowedNow || config != null),
+        )
         LocalLocationOutcomeLine(showRemembered = false)
         if (!allowedNow) {
             // Not a LAN command, so not greyed out by the dish's refusal: the account route is for exactly that case.

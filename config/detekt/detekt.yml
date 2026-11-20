@@ -1,0 +1,71 @@
+# Only the deltas - detekt builds on its defaults (buildUponDefaultConfig = true).
+# The rules loosened here are the ones that fight Jetpack Compose or this
+# codebase's long explanatory comments and hand-written numeric filters;
+# everything else keeps detekt's defaults, and real findings get fixed
+# rather than silenced.
+
+complexity:
+  # The inertial core and the telemetry views are hand-written state machines and
+  # numeric filters; their size is inherent and their behaviour is pinned by unit
+  # tests. These bounds still catch runaway growth in new code.
+  LongMethod:
+    threshold: 220
+  LongParameterList:
+    # Data carriers and Compose calls take what they take.
+    active: false
+  LargeClass:
+    threshold: 1200
+  TooManyFunctions:
+    # A file groups a feature's small helpers on purpose.
+    active: false
+  CyclomaticComplexMethod:
+    # Off for the same reason: the filters and parsers this app is made of score
+    # high by design (the auto-tuner reaches 138), and a threshold that admits
+    # them admits everything.
+    active: false
+  NestedBlockDepth:
+    threshold: 8
+  ComplexCondition:
+    threshold: 8
+
+style:
+  MagicNumber:
+    # dp paddings, telemetry bounds and test vectors read fine as numbers.
+    active: false
+  MaxLineLength:
+    # p99 of the codebase is 158 columns; the prose comments explain as they go.
+    # 220 bounds new code; the historical outliers beyond it have been wrapped.
+    maxLineLength: 220
+  ReturnCount:
+    # Early returns are the house style for guards.
+    active: false
+  ThrowsCount:
+    max: 6
+  UnusedPrivateMember:
+    # Compose previews take the parameters their screens do.
+    ignoreAnnotated: ['Preview']
+  LoopWithTooManyJumpStatements:
+    # Guard-continue loops over mixed telemetry batches need a few exits.
+    maxJumpCount: 3
+  DestructuringDeclarationWithTooManyEntries:
+    maxDestructuringEntries: 4
+
+exceptions:
+  TooGenericExceptionCaught:
+    # Around hardware, IPC and the network anything can be thrown, and every
+    # such catch logs what it saw.
+    active: false
+  SwallowedException:
+    # The log line is the point of the catch.
+    active: false
+
+naming:
+  FunctionParameterNaming:
+    # Compose parameters mirror named arguments; data classes carry wire field names.
+    active: false
+  FunctionNaming:
+    # @Composable functions are PascalCase by convention.
+    functionPattern: '[A-Za-z][a-zA-Z0-9]*'
+  MatchingDeclarationName:
+    # A screen file holds the screen plus its small satellite types.
+    active: false

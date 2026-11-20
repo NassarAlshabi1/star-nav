@@ -170,7 +170,10 @@ private fun ConnectionCard(s: DishGetStatusResponse, history: DishHistory?) {
         KeyValueRow(stringResource(R.string.ov_upload), stringResource(R.string.unit_mbps, (s.uplink_throughput_bps / 1e6f).f(2)))
         KeyValueRow(stringResource(R.string.ov_signal), s.signal_quality.f(2))
         KeyValueRow(
-            stringResource(R.string.ov_snr), stringResource(if (s.is_snr_above_noise_floor) R.string.ov_snr_ok else R.string.ov_snr_low), status = if (s.is_snr_above_noise_floor && !s.is_snr_persistently_low) null else Status.WARN)
+            stringResource(R.string.ov_snr),
+            stringResource(if (s.is_snr_above_noise_floor) R.string.ov_snr_ok else R.string.ov_snr_low),
+            status = if (s.is_snr_above_noise_floor && !s.is_snr_persistently_low) null else Status.WARN,
+        )
         // Power draw: the power supply's own figure when it reports one, else the newest sample of the history (a Mini).
         val upsu = s.upsu_stats?.dish_power?.takeIf { it > 0f }
         val aps = s.aps_stats?.dish_power?.takeIf { it > 0f }
@@ -289,7 +292,9 @@ private fun OrientationCard(s: DishGetStatusResponse) {
         if (a != null) {
             KeyValueRow(
                 stringResource(R.string.dish_attitude),
-                stringResource(R.string.ov_attitude_value, attitudeStateText(a.attitude_estimation_state), a.attitude_uncertainty_deg.f(1)), status = if (a.attitude_estimation_state == AttitudeState.CONVERGED) Status.OK else Status.WARN)
+                stringResource(R.string.ov_attitude_value, attitudeStateText(a.attitude_estimation_state), a.attitude_uncertainty_deg.f(1)),
+                status = if (a.attitude_estimation_state == AttitudeState.CONVERGED) Status.OK else Status.WARN,
+            )
             KeyValueRow(stringResource(R.string.dish_tilt), "${a.tilt_angle_deg.f(1)}°")
         }
         s.ned2dish_quaternion?.let { q -> KeyValueRow(stringResource(R.string.dish_heading), "${q.attitude().headingDeg.f(1)}°") }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.wire)
+    alias(libs.plugins.detekt)
 }
 
 java {
@@ -17,6 +18,11 @@ kotlin {
 
 wire {
     kotlin {}
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
 }
 
 dependencies {

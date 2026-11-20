@@ -365,7 +365,10 @@ class FakeRouterSimulation(
 
     private fun networkInterfaces() = GetNetworkInterfacesResponse(
         listOf(
-            NetworkInterface(name = "wan", up = true, mac_address = "02:00:00:00:00:01", ipv4_addresses = listOf("100.64.1.2"), ethernet = EthernetNetworkInterface(link_detected = true, speed_mbps = 1000, autonegotiation_on = true, duplex = 2)),
+            NetworkInterface(
+                name = "wan", up = true, mac_address = "02:00:00:00:00:01", ipv4_addresses = listOf("100.64.1.2"),
+                ethernet = EthernetNetworkInterface(link_detected = true, speed_mbps = 1000, autonegotiation_on = true, duplex = 2),
+            ),
             NetworkInterface(
                 name = "wlan0", up = true, mac_address = "02:00:00:00:00:0a",
                 wifi = WifiNetworkInterface(channel = 6, link_quality = 70.0, signal_level = -48.0, noise_level = -92.0, links = listOf(WifiNetworkInterface.WirelessLink(band = 1, channel = 6, bandwidth = 20))),
@@ -379,8 +382,20 @@ class FakeRouterSimulation(
 
     private fun radioStats() = GetRadioStatsResponse(
         listOf(
-            RadioStats(band = WifiBand.RF_2GHZ, rx_stats = NetworkInterface.RxStats(bytes = 5_000_000, packets = 40_000), tx_stats = NetworkInterface.TxStats(bytes = 9_000_000, packets = 60_000), thermal_status = RadioStats.ThermalStatus(level = 0, temp = 52, duty_cycle = 100), antenna_status = RadioStats.AntennaStatus(rssi1 = -48f, rssi2 = -50f)),
-            RadioStats(band = WifiBand.RF_5GHZ, rx_stats = NetworkInterface.RxStats(bytes = 25_000_000, packets = 90_000), tx_stats = NetworkInterface.TxStats(bytes = 90_000_000, packets = 120_000), thermal_status = RadioStats.ThermalStatus(level = 0, temp = 55, duty_cycle = 100), antenna_status = RadioStats.AntennaStatus(rssi1 = -51f, rssi2 = -52f)),
+            RadioStats(
+                band = WifiBand.RF_2GHZ,
+                rx_stats = NetworkInterface.RxStats(bytes = 5_000_000, packets = 40_000),
+                tx_stats = NetworkInterface.TxStats(bytes = 9_000_000, packets = 60_000),
+                thermal_status = RadioStats.ThermalStatus(level = 0, temp = 52, duty_cycle = 100),
+                antenna_status = RadioStats.AntennaStatus(rssi1 = -48f, rssi2 = -50f),
+            ),
+            RadioStats(
+                band = WifiBand.RF_5GHZ,
+                rx_stats = NetworkInterface.RxStats(bytes = 25_000_000, packets = 90_000),
+                tx_stats = NetworkInterface.TxStats(bytes = 90_000_000, packets = 120_000),
+                thermal_status = RadioStats.ThermalStatus(level = 0, temp = 55, duty_cycle = 100),
+                antenna_status = RadioStats.AntennaStatus(rssi1 = -51f, rssi2 = -52f),
+            ),
         ),
     )
 

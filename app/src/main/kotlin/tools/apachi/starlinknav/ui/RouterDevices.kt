@@ -59,7 +59,7 @@ fun RouterDevicesSection(data: RouterData, env: RouterEnv, actions: RouterAction
             val key = c.mac_address.ifEmpty { "#${c.client_id}" }
             ClientRow(
                 c = c, thisPhone = ClientList.isThisPhone(c, env.ownAddresses), expanded = open == key,
-                onToggle = { open = if (open == key) null else key }, actions = actions, data = data,
+                onToggle = { open = if (open == key) null else key }, actions = actions,
             )
         }
         Hint(stringResource(R.string.rd_hint))
@@ -82,7 +82,7 @@ private fun ControlOutcomeCard(tags: List<String>) {
 }
 
 @Composable
-private fun ClientRow(c: WifiClient, thisPhone: Boolean, expanded: Boolean, onToggle: () -> Unit, actions: RouterActions, data: RouterData) {
+private fun ClientRow(c: WifiClient, thisPhone: Boolean, expanded: Boolean, onToggle: () -> Unit, actions: RouterActions) {
     val colors = StarTheme.colors
     val state = ClientList.state(c)
     Column(Modifier.fillMaxWidth().clickable(onClick = onToggle).padding(vertical = Space.s), verticalArrangement = Arrangement.spacedBy(Space.hair)) {
@@ -107,12 +107,12 @@ private fun ClientRow(c: WifiClient, thisPhone: Boolean, expanded: Boolean, onTo
         if (c.download_mb > 0 || c.upload_mb > 0) {
             Text(stringResource(R.string.rd_usage, bytes(c.download_mb * 1_048_576L), bytes(c.upload_mb * 1_048_576L)), style = MaterialTheme.typography.bodySmall, color = colors.muted)
         }
-        if (expanded) ClientDetail(c, thisPhone, actions, data)
+        if (expanded) ClientDetail(c, thisPhone, actions)
     }
 }
 
 @Composable
-private fun ClientDetail(c: WifiClient, thisPhone: Boolean, actions: RouterActions, data: RouterData) {
+private fun ClientDetail(c: WifiClient, thisPhone: Boolean, actions: RouterActions) {
     val colors = StarTheme.colors
     val caps = rememberCapabilities(Device.ROUTER)
     val blockedRename = caps.unavailable(DishCallKind.ROUTER_SET_CLIENT_NAME)
@@ -137,7 +137,14 @@ private fun ClientDetail(c: WifiClient, thisPhone: Boolean, actions: RouterActio
             }
         }
         c.ping_metrics?.takeIf { it.latency_5m > 0f }?.let {
-            KeyValueRow(stringResource(R.string.rd_ping), stringResource(R.string.rd_ping_value, stringResource(R.string.unit_ms, it.latency_5m.f(0)), stringResource(R.string.unit_percent, (it.drop_rate_5m * 100f).f(1))))
+            KeyValueRow(
+                stringResource(R.string.rd_ping),
+                stringResource(
+                    R.string.rd_ping_value,
+                    stringResource(R.string.unit_ms, it.latency_5m.f(0)),
+                    stringResource(R.string.unit_percent, (it.drop_rate_5m * 100f).f(1)),
+                ),
+            )
         }
         if (c.seconds_until_dhcp_lease_expires > 0f && c.seconds_until_dhcp_lease_expires.isFinite()) {
             KeyValueRow(stringResource(R.string.rd_lease), duration((c.seconds_until_dhcp_lease_expires * 1000f).toLong()))
@@ -147,7 +154,11 @@ private fun ClientDetail(c: WifiClient, thisPhone: Boolean, actions: RouterActio
         Row(horizontalArrangement = Arrangement.spacedBy(Space.s), modifier = Modifier.padding(top = Space.xs)) {
             SecondaryButton(stringResource(R.string.rd_rename), { newName = c.given_name; renaming = true }, enabled = !actions.busy && blockedRename == null && c.mac_address.isNotEmpty())
             val paused = ClientList.state(c) == ClientList.State.PAUSED
-            SecondaryButton(stringResource(if (paused) R.string.rd_resume else R.string.rd_pause), { pausing = true }, enabled = !actions.busy && blockedPause == null && c.mac_address.isNotEmpty() && (paused || !thisPhone))
+            SecondaryButton(
+                stringResource(if (paused) R.string.rd_resume else R.string.rd_pause),
+                { pausing = true },
+                enabled = !actions.busy && blockedPause == null && c.mac_address.isNotEmpty() && (paused || !thisPhone),
+            )
         }
         val reason = blockedRename ?: blockedPause
         if (reason != null) {

@@ -33,7 +33,7 @@ private const val STEP_15S = 15_000L
  * router's own event log. A sample the router could not take (no data) leaves a gap.
  */
 @Composable
-fun RouterHistorySection(feed: DishFeed, data: RouterData, env: RouterEnv) {
+fun RouterHistorySection(data: RouterData, env: RouterEnv) {
     val sample = data.samples[DishCallKind.ROUTER_HISTORY]
     val response = sample.okResponse()?.wifi_get_history
     val h = remember(sample) { response?.let(RouterHistory::of) }

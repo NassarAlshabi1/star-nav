@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.detekt)
     application
 }
 
@@ -17,6 +18,11 @@ kotlin {
 application {
     mainClass = "tools.apachi.starlinknav.tools.MainKt"
     applicationName = "slnav"
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
 }
 
 dependencies {

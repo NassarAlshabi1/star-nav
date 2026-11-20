@@ -28,6 +28,8 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - name: Translations in step (coverage, placeholders, plural forms)
         run: python3 .github/check-translations.py
+      - name: Static analysis (detekt)
+        run: ./gradlew --stacktrace detekt
       - name: Unit tests, lint and debug builds
         run: ./gradlew --stacktrace :core:test :tools:installDist :app:lintFossDebug :app:lintPlayDebug :app:assembleFossDebug :app:assemblePlayDebug
       - name: Screenshot tests (English, Arabic, Ukrainian)
@@ -38,6 +40,16 @@ jobs:
         with:
           name: lint-reports
           path: app/build/reports/lint-results-*.html
+          if-no-files-found: ignore
+      - name: Detekt reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: detekt-reports
+          path: |
+            app/build/reports/detekt/*
+            core/build/reports/detekt/*
+            tools/build/reports/detekt/*
           if-no-files-found: ignore
       - name: Screenshot reports (actual and expected images)
         if: failure()

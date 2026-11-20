@@ -20,8 +20,14 @@ class AccountSourceRulesTest {
         return f.readLines().filter { raw ->
             val t = raw.trim()
             when {
-                inBlock -> { if ("*/" in t) inBlock = false; false }
-                t.startsWith("/*") -> { if ("*/" !in t) inBlock = true; false }
+                inBlock -> {
+                    if ("*/" in t) inBlock = false
+                    false
+                }
+                t.startsWith("/*") -> {
+                    if ("*/" !in t) inBlock = true
+                    false
+                }
                 t.startsWith("//") -> false
                 else -> true
             }
@@ -40,7 +46,10 @@ class AccountSourceRulesTest {
         val files = code(appAccount)
         assertTrue(files.isNotEmpty())
         for ((name, text) in files) {
-            for (forbidden in listOf("addJavascriptInterface", "evaluateJavascript", "javascript:", "JavascriptInterface", "WebMessage", "postWebMessage", "addDocumentStartJavaScript", "setWebContentsDebuggingEnabled")) {
+            for (forbidden in listOf(
+                "addJavascriptInterface", "evaluateJavascript", "javascript:", "JavascriptInterface", "WebMessage",
+                "postWebMessage", "addDocumentStartJavaScript", "setWebContentsDebuggingEnabled",
+            )) {
                 assertTrue(forbidden !in text, "$name uses $forbidden")
             }
         }
@@ -50,7 +59,11 @@ class AccountSourceRulesTest {
     fun nothingInTheFeatureLogsOrPrints() {
         for (dir in listOf(appAccount, coreAccount)) {
             for ((name, text) in code(dir)) {
-                for (forbidden in listOf("android.util.Log", "Log.d(", "Log.i(", "Log.w(", "Log.e(", "Log.v(", "println(", "print(", "printStackTrace", "Timber", "Logger", "HttpLoggingInterceptor", "addInterceptor", "addNetworkInterceptor")) {
+                for (forbidden in listOf(
+                    "android.util.Log", "Log.d(", "Log.i(", "Log.w(", "Log.e(", "Log.v(",
+                    "println(", "print(", "printStackTrace", "Timber", "Logger",
+                    "HttpLoggingInterceptor", "addInterceptor", "addNetworkInterceptor",
+                )) {
                     assertTrue(forbidden !in text, "$name uses $forbidden")
                 }
             }

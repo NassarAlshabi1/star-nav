@@ -12,6 +12,14 @@ All notable changes to this project are listed here. The format follows
 - CI checks that every translation stays in step with the English strings: same keys, same format placeholders,
   all Arabic plural forms.
 - README in Arabic.
+- A baseline profile: Android pre-compiles the app's classes and the gRPC stack the first dish probe uses
+  while it installs the app, so the first launch after an install or an update no longer runs interpreted.
+- detekt (static analysis) runs in CI over the app, the core and the tools.
+
+### Changed
+- detekt's first findings: parameters that had gone unused (the position actions, the router client card,
+  the router history), an `if (e is InterruptedException)` inside a broad `catch` is now a catch of its own,
+  and the few lines that ran past 220 columns, wrapped.
 
 ## [0.6.1] - 2026-11-19
 

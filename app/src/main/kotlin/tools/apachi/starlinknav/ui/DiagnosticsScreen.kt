@@ -156,7 +156,11 @@ private fun DishStatusCard(dish: DishUi, reboot: RebootUi, now: Long) {
         g?.pnt_filter_convergence_state?.takeIf { it != 0 }?.let { KeyValueRow(stringResource(R.string.dish_pnt_filter), AttitudeState.name(it)) }
         if (g?.inhibit_gps == true) KeyValueRow("inhibit_gps", "true", status = Status.WARN)
         s.alignment_stats?.let { a ->
-            KeyValueRow(stringResource(R.string.dish_attitude), "${AttitudeState.name(a.attitude_estimation_state)} ±${a.attitude_uncertainty_deg.f()}°", status = if (a.attitude_estimation_state == AttitudeState.CONVERGED) Status.OK else Status.WARN)
+            KeyValueRow(
+                stringResource(R.string.dish_attitude),
+                "${AttitudeState.name(a.attitude_estimation_state)} ±${a.attitude_uncertainty_deg.f()}°",
+                status = if (a.attitude_estimation_state == AttitudeState.CONVERGED) Status.OK else Status.WARN,
+            )
             KeyValueRow(stringResource(R.string.dish_tilt), "${a.tilt_angle_deg.f()}°")
         }
         s.ned2dish_quaternion?.let { q ->
@@ -247,7 +251,11 @@ private fun PhoneCard(phone: PhoneUi, now: Long) {
         // collapsing, its AUTO fix lagging tens of metres).
         if (phone.agcDb.isNotEmpty()) {
             val interference = phone.agcDb.any { it < 0 }
-            KeyValueRow(stringResource(if (interference) R.string.phone_agc_interference else R.string.phone_agc), stringResource(R.string.unit_db, phone.agcDb.joinToString(" ") { it.f() }), status = if (interference) Status.WARN else null)
+            KeyValueRow(
+                stringResource(if (interference) R.string.phone_agc_interference else R.string.phone_agc),
+                stringResource(R.string.unit_db, phone.agcDb.joinToString(" ") { it.f() }),
+                status = if (interference) Status.WARN else null,
+            )
         }
         phone.gnssModel?.let { KeyValueRow(stringResource(R.string.phone_chipset), it) }
         val r = phone.rates

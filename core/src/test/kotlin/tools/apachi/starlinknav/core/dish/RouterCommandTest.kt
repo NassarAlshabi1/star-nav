@@ -258,8 +258,8 @@ class RouterCommandTest {
         val client = RouterClient(FakeTransport(sim))
         val live = client.call(DishCallKind.ROUTER_CONFIG)
         val base = assertNotNull(RouterConfigRead.of(live), "the read that came from the router")
-        assertEquals(PW_OF_FAKE, base.config.networks[0].basic_service_sets[0].auth_wpa2_wpa3?.password)
-        assertFalse(PW_OF_FAKE in base.toString())
+        assertEquals(pwOfFake, base.config.networks[0].basic_service_sets[0].auth_wpa2_wpa3?.password)
+        assertFalse(pwOfFake in base.toString())
         assertNotNull(RouterConfigRead.of(client.call(DishCallKind.ROUTER_STATUS))) // wifi_get_status.config counts too
 
         // Every redacted route to a config is refused: the copies hold empty passwords and no unknown fields.
@@ -275,10 +275,10 @@ class RouterCommandTest {
 
         // And a redacted base never reaches a request: starting a write from it is impossible by construction.
         val edited = RouterCommand.SetConfig(base, listOf(WifiConfigEdit.SetNetworkName("Car"))).request(1)
-        assertEquals(PW_OF_FAKE, edited.wifi_set_config!!.wifi_config!!.networks[0].basic_service_sets[0].auth_wpa2_wpa3?.password)
+        assertEquals(pwOfFake, edited.wifi_set_config!!.wifi_config!!.networks[0].basic_service_sets[0].auth_wpa2_wpa3?.password)
     }
 
-    private val PW_OF_FAKE = FakeRouterSimulation.FAKE_PASSWORD
+    private val pwOfFake = FakeRouterSimulation.FAKE_PASSWORD
 
     @Test
     fun renamingAClientNeedsAMacAndSendsBothMessages() {

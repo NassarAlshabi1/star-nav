@@ -1,0 +1,18 @@
+# What ART pre-compiles at install time instead of interpreting on the first run:
+# the application class, settings, theme, MainActivity with every screen, the
+# telemetry core, and the gRPC stack the first dish probe runs.
+#
+# Hand-written around the startup path because generating one with a
+# macrobenchmark needs an emulator. The L lines ask for the classes to be
+# loaded, the HSPL lines for every method to be pre-compiled (a class rule may
+# only carry the L flag, so the two come in pairs); R8 remaps the rules to the
+# obfuscated names when it shrinks the release build, and entries matching no
+# class in the APK are dropped, so debug-only classes are harmless.
+Ltools/apachi/starlinknav/**
+HSPLtools/apachi/starlinknav/**->**(**)**
+Lokhttp3/**
+HSPLokhttp3/**->**(**)**
+Lokio/**
+HSPLokio/**->**(**)**
+Lcom/squareup/wire/**
+HSPLcom/squareup/wire/**->**(**)**

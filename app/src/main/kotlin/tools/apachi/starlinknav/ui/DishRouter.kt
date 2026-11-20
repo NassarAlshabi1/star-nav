@@ -153,7 +153,7 @@ fun DishRouterTab(feed: DishFeed, section: RouterSection, onSection: (RouterSect
                         }
                         RouterSection.DEVICES -> RouterDevicesSection(data, env, actions)
                         RouterSection.WIFI -> RouterWifiSection(data, env, actions)
-                        RouterSection.HISTORY -> RouterHistorySection(feed, data, env)
+                        RouterSection.HISTORY -> RouterHistorySection(data, env)
                         RouterSection.CONTROLS -> RouterControlsSection(feed, data, env, actions)
                     }
                 }

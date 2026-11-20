@@ -226,8 +226,10 @@ class StarlinkCloud(
         } catch (e: IOException) {
             val text = scrub("network: ${e.describe()}")
             if (GrpcErrors.neverReachedDevice(e)) CloudOutcome.Other(text) else CloudOutcome.NoAnswer(text)
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            CloudOutcome.Other("error: ${e.javaClass.simpleName}")
         } catch (e: Exception) {
-            if (e is InterruptedException) Thread.currentThread().interrupt()
             CloudOutcome.Other("error: ${e.javaClass.simpleName}")
         }
     }
@@ -351,8 +353,10 @@ class StarlinkCloud(
         block()
     } catch (e: IOException) {
         onFail(scrub("network: ${e.describe()}"))
+    } catch (e: InterruptedException) {
+        Thread.currentThread().interrupt()
+        onFail("error: ${e.javaClass.simpleName}")
     } catch (e: Exception) {
-        if (e is InterruptedException) Thread.currentThread().interrupt()
         onFail("error: ${e.javaClass.simpleName}")
     }
 
